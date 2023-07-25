@@ -17,7 +17,6 @@ namespace BookStore.Web.API.Context
                 context.Books.AddRange(
                     new Book
                     {
-                        Id = 1,
                         Title = "Lean Startup",
                         GenreId = 1,//personal growth
                         PageCount = 200,
@@ -25,7 +24,6 @@ namespace BookStore.Web.API.Context
                     },
                      new Book
                      {
-                         Id = 2,
                          Title = "Herland",
                          GenreId = 2, //Science
                          PageCount = 250,
@@ -33,7 +31,6 @@ namespace BookStore.Web.API.Context
                      },
                     new Book
                     {
-                        Id = 3,
                         Title = "Dune",
                         GenreId = 3, //Science Fiction
                         PageCount = 300,
