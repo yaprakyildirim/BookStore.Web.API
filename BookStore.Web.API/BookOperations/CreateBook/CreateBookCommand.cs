@@ -1,6 +1,6 @@
-﻿using BookStore.Web.API.Context;
+﻿using AutoMapper;
+using BookStore.Web.API.Context;
 using BookStore.Web.API.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Web.API.BookOperations.CreateBook
 {
@@ -9,9 +9,11 @@ namespace BookStore.Web.API.BookOperations.CreateBook
         public CreateBookModel Model { get; set; }
 
         private readonly BookDbContext _dbContext;
-        public CreateBookCommand(BookDbContext dbContext)
+        private readonly IMapper _mapper;
+        public CreateBookCommand(BookDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public void Handle()
@@ -21,12 +23,7 @@ namespace BookStore.Web.API.BookOperations.CreateBook
             if (book is not null)
                 throw new InvalidOperationException("Bu kitap zaten mevcut!");
 
-            book = new Book();
-            book.Title = Model.Title;
-            book.PublishDate = Model.PublishDate;
-            book.PageCount = Model.PageCount;
-            book.GenreId = Model.GenreId;
-
+            book = _mapper.Map<Book>(Model);
 
             _dbContext.Books.Add(book);
             _dbContext.SaveChanges();
