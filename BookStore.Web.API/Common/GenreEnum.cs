@@ -4,6 +4,8 @@
     {
         PersonalGrowth = 1,
         ScienceFiction,
-        Noval
+        Novel,
+        Drama,
+        Philosophy,
     }
 }

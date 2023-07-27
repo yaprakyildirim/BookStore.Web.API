@@ -3,27 +3,31 @@ using BookStore.Web.API.Common;
 using BookStore.Web.API.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStore.Web.API.BookOperations.GetBookDetail
+namespace BookStore.Web.API.Operations.BookOperations.Queries
 {
     public class GetBookDetailQuery
     {
-        private readonly BookDbContext _context;
-        private readonly IMapper _mapper;
+        public BookDetailViewModel Model { get; set; }
         public int BookId { get; set; }
-        public GetBookDetailQuery(BookDbContext context, IMapper mapper)
+
+        private readonly IBookDbContext _dbContext;
+        private readonly IMapper _mapper;
+        public GetBookDetailQuery(IBookDbContext dbContext, IMapper mapper)
         {
-            _context = context;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
-
         public BookDetailViewModel Handle()
         {
-            var book = _context.Books.Where(book => book.Id == BookId).SingleOrDefault();
+            var book = _dbContext.Books.Include(g => g.Genre).Include(a => a.Author).Where(book => book.Id == BookId).SingleOrDefault();
             if (book is null)
-                throw new InvalidOperationException("Kitap Bulunamadı!");
-
+            {
+                throw new InvalidOperationException("ID's not correct!");
+            }
             BookDetailViewModel vm = _mapper.Map<BookDetailViewModel>(book);
+
             return vm;
+
         }
     }
 
@@ -31,6 +35,8 @@ namespace BookStore.Web.API.BookOperations.GetBookDetail
     {
         public string Title { get; set; }
         public string Genre { get; set; }
+        public string AuthorName { get; set; }
+        public string AuthorSurname { get; set; }
         public int PageCount { get; set; }
         public string PublishDate { get; set; }
     }

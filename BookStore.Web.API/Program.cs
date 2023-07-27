@@ -10,10 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<BookDbContext>(options => options.UseInMemoryDatabase(databaseName: "BookStoreDB"));
+builder.Services.AddScoped<IBookDbContext>(provider => provider.GetService<BookDbContext>());
+
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ILoggerService,DBLogger>();
 
 var app = builder.Build();
@@ -25,6 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseCustomExceptionMiddleware();

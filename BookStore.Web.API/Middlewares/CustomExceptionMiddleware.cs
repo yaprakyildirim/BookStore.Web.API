@@ -2,9 +2,6 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 
 namespace BookStore.Web.API.Middlewares
 {
@@ -23,12 +20,14 @@ namespace BookStore.Web.API.Middlewares
             var watch = Stopwatch.StartNew();
             try
             {
+                // İstek bilgilerini loglama
                 string message = "[Request]  HTTP" + context.Request.Method + " - " + context.Request.Path;
                 _loggerService.Write(message);
 
                 await _next(context);
                 watch.Stop();
 
+                // Yanıt bilgilerini loglama
                 message = "[Response] HTTP" + context.Request.Method + " - " + context.Request.Path + " responded " + context.Response.StatusCode + " in " + watch.Elapsed.TotalMilliseconds + " ms ";
                 _loggerService.Write(message);
             }
@@ -41,12 +40,15 @@ namespace BookStore.Web.API.Middlewares
 
         private Task HandleException(HttpContext context, Exception ex, Stopwatch watch)
         {
+            // Hata durumunda HTTP durum kodunu ve içerik türünü belirleme
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
+            // Hata bilgisini loglama
             string message = "[Error]    HTTP" + context.Request.Method + " - " + context.Response.StatusCode + " Error Message " + ex.Message + " in " + watch.Elapsed.TotalMilliseconds + " ms ";
             Console.WriteLine(message);
 
+            // Hata bilgisini JSON formatında döndürme
             var result = JsonConvert.SerializeObject(new { error = ex.Message }, Formatting.None);
             return context.Response.WriteAsync(result);
         }
