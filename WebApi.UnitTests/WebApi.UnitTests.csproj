@@ -31,4 +31,11 @@
     <ProjectReference Include="..\BookStore.Web.API\BookStore.Web.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Applications\GenreOperations\Commands\CreateGenre\" />
+    <Folder Include="Applications\GenreOperations\Commands\DeleteGenre\" />
+    <Folder Include="Applications\GenreOperations\Commands\UpdateGenre\" />
+    <Folder Include="Applications\GenreOperations\Querys\" />
+  </ItemGroup>
+
 </Project>
